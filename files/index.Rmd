@@ -1,0 +1,71 @@
+---
+title: "About"
+output:
+  html_document:
+    toc: true
+    number_sections: true
+---
+
+```{r, eval=FALSE, echo=F,  include = FALSE}
+TODO: prediction des consequence selon keywords
+
+```
+
+```{r setup, echo=F, include = FALSE}
+#setup
+source("config.ini")
+source("files/functions_html_report.R")
+
+dir.create(data_out_dir, recursive=T, showWarnings=F)
+dir.create(files_out_dir, recursive=T, showWarnings=F)
+
+#libraries
+library(SNPediaR)
+library(knitr)
+library(dplyr)
+library(kableExtra)
+library(DT)
+library(ggplot2)
+library(ggrepel)
+library(RColorBrewer)
+```
+```{r read_snp_file, echo=F}
+my_snps <- read23andme(file_23andme)
+
+```
+
+<!-- Medical Conditions --> 
+```{r medical_conditions, echo=F, include=F}
+render("files/MedicalConditions.Rmd", output_file=file.path(html_out_dir, "MedicalConditions.html"),  knit_root_dir = getwd())
+```
+
+<!-- Medicine --> 
+```{r medicine, echo=F, include=F}
+render("files/Medicines.Rmd", output_format=html_document(), output_file=file.path(html_out_dir, "Medicines.html"), knit_root_dir = getwd())
+```
+
+<!-- Topic --> 
+```{r topic, echo=F, include=F}
+render("files/Topics.Rmd", output_file=file.path(html_out_dir, "Topics.html"), knit_root_dir = getwd())
+```
+
+<!-- about --> 
+```{r about, echo=F, include=F}
+# render("files/about.Rmd", output_file=file.path(html_out_dir, "about.html"), knit_root_dir = getwd())
+```
+
+
+#### Info
+
+First name: `r paste(first_name,"  ")`
+Last name: `r paste(last_name,"  ")`
+Input_file: `r paste(file_23andme, "\n")`
+
+#### Script info
+
+23andme report script by Eloi Mercier.  
+Last update: May 21, 2018
+
+#### Credits
+
+SNPedia: https://www.snpedia.com/

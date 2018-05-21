@@ -1,0 +1,41 @@
+---
+output: html_document
+params: 
+  set_title: test_title
+  genotype_summary: think_to_plot
+---
+
+---
+title: `r params$set_title`
+---
+
+```{r toto, eval=F, echo=F}
+# render("files/category_info_page_template.Rmd", params = list(set_title="TEST", genotype_summary=my_genotype_snpedia_info[[2]] ),       output_file=file.path(files_out_dir, "TEST.html"))
+#TODO : ADD PUBMED 
+
+```
+
+
+```{r plot_summary, echo=FALSE}
+# plotReputeSummary(params$genotype_summary, package="plotly")
+plotSNPcount(params$genotype_summary)
+```
+
+```{r create_summary_table, echo=FALSE,  results='asis'}
+df <- createDataTableFromGenotypeTagsList(list(params$genotype_summary))
+snpedia_links <- paste0("https://www.snpedia.com/index.php/",df$rsid)
+df$rsid <- paste0("[",df$rsid,"](",snpedia_links, ")")
+
+bla=sapply(unique(df$Consequence), function(x){range(which(df$Consequence==x))})
+       
+kable_df = kable(df, "html") %>%
+  kable_styling("striped", full_width = F) %>%
+    collapse_rows(columns = 1)
+for (cons in c("Good", "Bad", "Unknown")){
+  if (cons %in% colnames(bla)){
+    kable_df <- kable_df %>% 
+      group_rows(cons,bla[1,cons],bla[2,cons], label_row_css = paste0("background-color: ", switch(cons, Good="#122ad8", Bad="#d8121b", Unknown="#c6c7c8"), "; color: #fff;")) 
+  }
+}
+kable_df
+```

@@ -1,0 +1,19 @@
+---
+output: html_document
+title: "About"
+---
+
+#### Info
+
+First name: `r paste(first_name,"  ")`
+Last name: `r paste(last_name,"  ")`
+Input_file: `r paste(file_23andme, "\n")`
+
+#### Script info
+
+23andme report script by Eloi Mercier.  
+Last update: May 21, 2018
+
+#### Credits
+
+SNPedia: https://www.snpedia.com/

@@ -1,0 +1,10 @@
+name: "About"
+navbar:
+  title: "About"
+  left:
+    - text: "Medical Conditions"
+      href: MedicalConditions.html
+    - text: "Medicines"
+      href: Medicines.html
+    - text: "Topics"
+      href: Topics.html

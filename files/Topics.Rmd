@@ -1,0 +1,39 @@
+---
+output:  html_document
+title: "Topic"
+---
+
+### {.tabset .tabset-fade .tabset-pills}
+
+Here are listed the topics as defined from [SNPedia.](https://www.snpedia.com/index.php/Category:Topic). Only snps with an allele in SPNedia are reported here.
+
+
+```{r topic_setup, echo=F}
+ #clean
+my_genotypes_topic <- getMyGenotypeInfoInTopic(my_snps, topic="Topic", out_dir=data_out_dir, force=force_snpedia_update)
+my_genotypes_topic_summary <-createDataTableFromGenotypeTagsList(my_genotypes_topic)
+```
+
+#### Full table
+
+```{r topic_full_table,  echo=FALSE,  results='asis'}
+my_genotypes_topic_summary[1:10,]%>% mutate(
+    "Category"=Category,
+    "Consequence" = cell_spec(Consequence, "html", color = sapply(Consequence,function(x){switch(as.character(x), "Good"="blue", "Bad"="red", "Unknown"="grey")})),
+    "rsid"=rsid,
+    "Genotype"=Genotype,
+    "Summary"=Summary
+  ) %>%
+  select("Category", "Consequence", "rsid", "Genotype", "Summary") %>%
+kable( "html", align = "c", escape = F) %>%
+      kable_styling(full_width = T) %>%
+  column_spec(1, bold = T) %>%
+  collapse_rows(columns = 1)
+
+```
+
+#### Searchable table
+
+```{r topic_searchable_table, echo=F}
+datatable(my_genotypes_topic_summary, options = list(pageLength = 50, autoWidth = TRUE))
+```
