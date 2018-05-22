@@ -11,13 +11,14 @@ Here are listed the medicine as defined from [SNPedia.](https://www.snpedia.com/
 dir.create(file.path(files_out_dir, "Is_a_medicine"), recursive=T, showWarnings=F)
 my_genotypes_medicine <- getMyGenotypeInfoInTopic(my_snps, topic="Is_a_medicine", out_dir=data_out_dir, force=force_snpedia_update)
 my_genotypes_medicine_summary <-createDataTableFromGenotypeTagsList(my_genotypes_medicine)
+short_names <- shortenCategoryNames(names(my_genotypes_medicine), max_char=15)
 ```
 
 ```{r medicine_pages, eval=T, echo=F, include=F}
-for (i in 1:10){
+for (i in 1:length(my_genotypes_medicine)){
   x=my_genotypes_medicine[i]
-render("files/category_info_page_template.Rmd", params = list(set_title=names(x), genotype_summary=x[[1]] ),
-       output_file=file.path(files_out_dir, "Is_a_medicine", paste0(names(x),".html")), clean=T)
+  short_name_x=short_names[i]
+render("files/category_info_page_template.Rmd", params = list(set_title=short_name_x, genotype_summary=x[[1]] ), output_file=file.path(files_out_dir, "Is_a_medicine", paste0(short_name_x,".html")), clean=T)
 }
 ```
 
@@ -28,7 +29,7 @@ my_genotypes_medicine_summary_with_links=my_genotypes_medicine_summary
 category_links <- file.path("file://",files_out_dir, "Is_a_medicine",paste0(my_genotypes_medicine_summary_with_links$Category, ".html"))
 my_genotypes_medicine_summary_with_links$Category <- paste0("[",my_genotypes_medicine_summary_with_links$Category,"](",category_links, ")")
 
-my_genotypes_medicine_summary_with_links[1:10,]%>% mutate(
+my_genotypes_medicine_summary_with_links%>% mutate(
     "Category"=Category,
     "Consequence" = cell_spec(Consequence, "html", color = sapply(Consequence,function(x){switch(as.character(x), "Good"="blue", "Bad"="red", "Unknown"="grey")})),
     "rsid"=rsid,

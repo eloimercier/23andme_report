@@ -113,40 +113,6 @@ createDataTableFromGenotypeTagsList <- function(genotypeTagsList){
 }
 
 #plot repute summary for a given category
-#x=my_genotype_snpedia_info[[2]]
-plotReputeSummary <- function(x, package=c("ggplot2", "plotly")){
-    #prepare data table
-  df=data.frame(rsid=paste0("rs",x["rsid",]),repute=x["repute",], magnitude=as.numeric(x["magnitude",]), stringsAsFactors=F)
-  df[is.na(df[,"repute"]), "repute"]="Unknown"
-  df[is.na(df[,"magnitude"]), "magnitude"]=0
-  fill_colour=sapply(df$repute,switch,Good="blue",Bad="red",Unknown="grey")
-  names(fill_colour)=df$rsid
-  #reassign unknown to bad or good based on keyword
-  
-  #ggplot2
-  if (length(package)==2 || package=="ggplot2"){
-    require(ggplot2)
-    p<-ggplot(data=df, aes(x=repute, y=magnitude, fill=rsid, label=rsid)) +
-      geom_bar(stat="identity",color="black") +
-      scale_fill_manual(values = fill_colour) + 
-      geom_text(size = 3, position = position_stack(vjust = 0.5), color="white")+
-      facet_grid(.~repute, scale="free_x", space="free")
-    p + theme(legend.position="none")
-  } else if (package=="plotly") { 
-    plotly
-    require(plotly)
-    p <- plot_ly(df, x = ~repute, y = df$magnitude, type = 'bar', text = ~rsid, 
-                 textposition = 'auto',
-                 textfont = list(color = 'white'),
-                 marker = list(color = fill_colour,
-                 line=list(color="black", width=1))) %>%
-      layout(yaxis = list(title = 'Magnitude'), barmode = 'stack')
-    p
-  } else {
-    stop("Unsupported display package")
-  }
-}
-
 plotSNPcount <- function(x){
   df=data.frame(rsid=paste0("rs",x["rsid",]),repute=x["repute",], magnitude=as.numeric(x["magnitude",]), stringsAsFactors=F)
   df[is.na(df[,"repute"]), "repute"]="Unknown"
@@ -162,3 +128,20 @@ plotSNPcount <- function(x){
      p <-p + scale_fill_gradient(low="white", high="purple", limits=c(0,10), na.value = "grey80")
     p
 }
+
+#clean names to remove foreign character
+cleanNames <- function(s, foreign_char="szþàáâãäåçèéêëìíîïðñòóôõöùúûüý", new_char="szyaaaaaaceeeeiiiidnooooouuuuy"){
+  s1 <- chartr(foreign_char, new_char, s)
+  return(s1)
+}
+
+#shorten names of categories
+shortenCategoryNames <- function(x, max_char=15){
+  x=cleanNames(x)
+  short_names=substr(x, 1,max_char)
+  if(any(duplicated(short_names)>0)){
+    stop("Short names identical. Try increasing the max_char.")
+  }
+  return(short_names)
+}
+

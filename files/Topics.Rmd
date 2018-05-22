@@ -14,10 +14,14 @@ my_genotypes_topic <- getMyGenotypeInfoInTopic(my_snps, topic="Topic", out_dir=d
 my_genotypes_topic_summary <-createDataTableFromGenotypeTagsList(my_genotypes_topic)
 ```
 
+```{r topic_pages, eval=FALSE, echo=F, include=F}
+Do not genrate html files fot topic, too many!
+```
+
 #### Full table
 
 ```{r topic_full_table,  echo=FALSE,  results='asis'}
-my_genotypes_topic_summary[1:10,]%>% mutate(
+my_genotypes_topic_summary%>% mutate(
     "Category"=Category,
     "Consequence" = cell_spec(Consequence, "html", color = sapply(Consequence,function(x){switch(as.character(x), "Good"="blue", "Bad"="red", "Unknown"="grey")})),
     "rsid"=rsid,
