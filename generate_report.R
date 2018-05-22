@@ -1,13 +1,15 @@
+#this is what you need (and probably more)
 #install pandoc
 #install miktex
 #install.packages("kableExtra")
 #package DT
-#setwd("C:/Users/Eloi/Dropbox/Personnal/23andme")
 #library(rmarkdown)
-#dir_out="html_report"
 
 
-setwd("C:/Users/Eloi/Dropbox/Personnal/23andme/HTML_Script")
+
+scrip_directory="C:/my_path/23andme_report" #where the script is located,
+
+setwd(scrip_directory)
 source("config.ini")
 library(rmarkdown)
 render("files/index.Rmd", output_format=html_document(),
