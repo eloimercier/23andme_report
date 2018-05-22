@@ -139,9 +139,9 @@ cleanNames <- function(s, foreign_char="szþàáâãäåçèéêëìíîïðñòóôõöùúûüý", new_cha
 shortenCategoryNames <- function(x, max_char=15){
   x=cleanNames(x)
   short_names=substr(x, 1,max_char)
-  if(any(duplicated(short_names)>0)){
-    stop("Short names identical. Try increasing the max_char.")
-  }
+  # if(any(duplicated(short_names)>0)){
+  #   stop("Short names identical. Try increasing the max_char.")
+  # }
   return(short_names)
 }
 
